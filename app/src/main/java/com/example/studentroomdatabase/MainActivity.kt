@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var studentDatabase: StudentDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -35,25 +35,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun saveData() {
-
-        val firstName = binding.FirstNameId.text.toString()
-        val lastName = binding.LastNameId.text.toString()
-        val rollNo = binding.RollNoId.text.toString()
-        if (firstName.isNotEmpty() && lastName.isNotEmpty() && rollNo.isNotEmpty()) {
-            val student = Student(0, firstName, lastName, rollNo.toInt())
-            GlobalScope.launch {
-                studentDatabase.studentDao().insert(student)
-            }
-            binding.FirstNameId.text.clear()
-            binding.LastNameId.text.clear()
-            binding.RollNoId.text.clear()
-            Toast.makeText(this, "Data Saved", Toast.LENGTH_SHORT).show()
-        }else{
-            Toast.makeText(this, "Fill All Fields", Toast.LENGTH_SHORT).show()
-        }
-
-    }
 
     private fun searchData() {
         val rollNo = binding.SearchId.text.toString()
@@ -62,11 +43,10 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch {
                 student = studentDatabase.studentDao().findByRollNo(rollNo.toInt())
                 if (studentDatabase.studentDao().isEmpty()) {
-                    Handler(Looper.getMainLooper()).post{
+                    Handler(Looper.getMainLooper()).post {
                         Toast.makeText(this@MainActivity, "No Data", Toast.LENGTH_SHORT).show()
                     }
-                }
-                else{
+                } else {
                     displayData(student)
 
                 }
@@ -81,6 +61,26 @@ class MainActivity : AppCompatActivity() {
             binding.RollNoId.setText(student.rollNo.toString())
 
 
+        }
+
+    }
+
+    private fun saveData() {
+
+        val firstName = binding.FirstNameId.text.toString()
+        val lastName = binding.LastNameId.text.toString()
+        val rollNo = binding.RollNoId.text.toString()
+        if (firstName.isNotEmpty() && lastName.isNotEmpty() && rollNo.isNotEmpty()) {
+            val student = Student(0, firstName, lastName, rollNo.toInt())
+            GlobalScope.launch {
+                studentDatabase.studentDao().insert(student)
+            }
+            binding.FirstNameId.text.clear()
+            binding.LastNameId.text.clear()
+            binding.RollNoId.text.clear()
+            Toast.makeText(this@MainActivity, "Data Saved", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this@MainActivity, "Fill All Fields", Toast.LENGTH_SHORT).show()
         }
 
     }
